@@ -18,12 +18,12 @@ export class Kaleidoblobs {
     const maxRadiusSquared = maxRadius * maxRadius;
     this.allShapes = [];
     for (let s = 0; s < numberOfShapes; s++) {
-      const symmetry = random(maxSymmetry - minSymmetry + 1) + minSymmetry;
+      const symmetry = randomBetween(minSymmetry, maxSymmetry);
       const centre = {
         x: (s + 1) * horizontalSpacing,
         y: drawingCanvas.height / 2,
       };
-      const numberOfPoints = random(maxPoints - minPoints + 1) + minPoints;
+      const numberOfPoints = randomBetween(minPoints, maxPoints);
       this.allShapes.push(
         new Kaleidoblob(
           centre,
@@ -82,6 +82,6 @@ export class Kaleidoblobs {
   }
 }
 
-function random(n) {
-  return Math.floor(Math.random() * n);
+function randomBetween(a, b) {
+  return Math.floor(Math.random() * (b - a + 1)) + a;
 }

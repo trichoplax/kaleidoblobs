@@ -45,9 +45,10 @@ export class Kaleidoblob {
         for (let rotation = 0; rotation < symmetry; rotation++) {
           for (const point of this.points) {
             const rotatedCoords = rotated(point, rotation, symmetry);
-            const x = rotatedCoords.x;
-            const y = rotatedCoords.y;
-            this.ctx.lineTo(centre.x + x, centre.y + y);
+            this.ctx.lineTo(
+              centre.x + rotatedCoords.x,
+              centre.y + rotatedCoords.y,
+            );
           }
         }
         this.ctx.closePath();
@@ -62,5 +63,5 @@ function rotated(point, rotation, symmetry) {
   const angle = ((2 * Math.PI) / symmetry) * rotation;
   const x = point.x * Math.cos(angle) - point.y * Math.sin(angle);
   const y = point.x * Math.sin(angle) + point.y * Math.cos(angle);
-  return { x: x, y: y };
+  return { x, y };
 }

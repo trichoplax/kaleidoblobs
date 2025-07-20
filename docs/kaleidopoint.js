@@ -14,15 +14,17 @@ export class Kaleidopoint {
     drift.y += Math.sin(angle) / 30;
     const driftLengthSquared = drift.x * drift.x + drift.y * drift.y;
     if (driftLengthSquared > 1) {
-      drift.x /= Math.sqrt(driftLengthSquared);
-      drift.y /= Math.sqrt(driftLengthSquared);
+      const currentDriftLength = Math.sqrt(driftLengthSquared);
+      drift.x /= currentDriftLength;
+      drift.y /= currentDriftLength;
     }
     this.x += drift.x / 10;
     this.y += drift.y / 10;
     const lengthSquared = this.x * this.x + this.y * this.y;
     if (lengthSquared > this.maxRadiusSquared) {
-      this.x *= this.maxRadius / Math.sqrt(lengthSquared);
-      this.y *= this.maxRadius / Math.sqrt(lengthSquared);
+      const currentLength = Math.sqrt(lengthSquared);
+      this.x *= this.maxRadius / currentLength;
+      this.y *= this.maxRadius / currentLength;
       const angle = Math.random() * 2 * Math.PI;
       drift.x = Math.cos(angle) / 20;
       drift.y = Math.sin(angle) / 20;
