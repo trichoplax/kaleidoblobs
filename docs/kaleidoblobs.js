@@ -82,7 +82,7 @@ function restart() {
       const x = Math.cos(angleStep * p) * initialRadius;
       const y = Math.sin(angleStep * p) * initialRadius;
       const drift = { x: 0, y: 0 };
-      shape.points.push({ x: x, y: y, drift: drift });
+      shape.points.push({ x, y, drift });
     }
     globals.allShapes.push(shape);
   }
