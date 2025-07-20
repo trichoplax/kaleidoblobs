@@ -1,185 +1,206 @@
-$(load)
+"use strict";
 
-function load() {
-	timeOut = 0
-	canvas = document.getElementById('canvas')
-	ctx = canvas.getContext('2d')
-	fullScreenDiv = document.getElementById('full_screen_div')
-	updateResolution()
-	
-	document.onfullscreenchange = function(event) {
-		adjustCanvas()
-		restart()
-	}
-	document.onmozfullscreenchange = document.onfullscreenchange
-	document.onwebkitfullscreenchange = document.onfullscreenchange
-	
-	$('#restart').click(function() { restart() })
-	
-	$('#x_resolution').change(function() { updateResolution() })
-	$('#y_resolution').change(function() { updateResolution() })
-	
-	$('#full_screen').click(function() {
-		if(fullScreenDiv.requestFullscreen) {
-			fullScreenDiv.requestFullscreen()
-		} else if (fullScreenDiv.mozRequestFullScreen) {
-			fullScreenDiv.mozRequestFullScreen()
-		} else if (fullScreenDiv.webkitRequestFullscreen) {
-			fullScreenDiv.webkitRequestFullscreen()
-		} else if (fullScreenDiv.msRequestFullscreen) {
-			fullScreenDiv.msRequestFullscreen()
-		}
-	})
-	
-	restart()
+const globals = {
+  animationTimeOutId: null,
+  numberOfShapes: null,
+  ctx: null,
+  drawingCanvas: null,
+  allShapes: null,
+  maxRadius: null,
+  maxRadiusSquared: null,
+};
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initialise);
+} else {
+  initialise();
+}
+
+function initialise() {
+  globals.drawingCanvas = document.getElementById("canvas");
+  globals.ctx = document.getElementById("canvas").getContext("2d");
+  const fullScreenDiv = document.getElementById("full_screen_div");
+  document.onfullscreenchange = function (event) {
+    adjustCanvas();
+    restart();
+  };
+  document.getElementById("restart").addEventListener("click", restart);
+
+  document
+    .getElementById("full_screen")
+    .addEventListener("click", () => fullScreenDiv.requestFullscreen());
+
+  restart();
 }
 
 function adjustCanvas() {
-	if (document.mozFullScreen || document.webkitIsFullScreen || document.fullscreen) {
-		canvas.height = resolutionY
-		canvas.width = resolutionX	
-	} else {
-		canvas.height = document.body.clientHeight
-		canvas.width = document.body.clientWidth			
-	}
-}
-
-function updateResolution() {
-	resolutionX = parseInt($('#x_resolution').val(), 10)
-	resolutionY = parseInt($('#y_resolution').val(), 10)
+  if (document.fullscreenElement) {
+    globals.drawingCanvas.height = window.screen.height;
+    globals.drawingCanvas.width = window.screen.width;
+  } else {
+    globals.drawingCanvas.height = window.innerHeight;
+    globals.drawingCanvas.width = window.innerWidth;
+  }
 }
 
 function restart() {
-	clearTimeout(timeOut)
-	numberOfShapes = parseInt($('#shapes').val(), 10)
-	minPoints = parseInt($('#min_points').val(), 10)
-	maxPoints = parseInt($('#max_points').val(), 10)
-	minSymmetry = parseInt($('#min_symmetry').val(), 10)
-	maxSymmetry = parseInt($('#max_symmetry').val(), 10)
-	adjustCanvas()
-	shapes = []
-	var horizontalSpacing = canvas.width / (numberOfShapes+1)
-	var verticalExtent = canvas.height / 4
-	maxRadius = Math.min(horizontalSpacing / 2, verticalExtent * 2)
-	maxRadiusSquared = maxRadius * maxRadius
-	var initialRadius = maxRadius / 4
-	for (var s=0; s<numberOfShapes; s++) {
-		var shape = {}
-		shape.symmetry = random(maxSymmetry - minSymmetry + 1) + minSymmetry
-		shape.centre = {x:(s+1)*horizontalSpacing, y:canvas.height/2}
-		shape.drift = {x:0, y:0}
-		shape.numberOfPoints = random(maxPoints - minPoints + 1) + minPoints
-		var angleStep = 2*Math.PI / shape.symmetry / shape.numberOfPoints
-		shape.points = []
-		for (var p=0; p<shape.numberOfPoints; p++) {
-			var x = Math.cos(angleStep * p) * initialRadius
-			var y = Math.sin(angleStep * p) * initialRadius
-			var drift = {x:0, y:0}
-			shape.points.push({x:x, y:y, drift:drift})
-		}
-		shapes.push(shape)
-	}
-	
-	animate()
+  clearTimeout(globals.animationTimeOutId);
+  globals.numberOfShapes = parseInt(
+    document.getElementById("shapes").value,
+    10,
+  );
+  const minPoints = parseInt(document.getElementById("min_points").value, 10);
+  const maxPoints = parseInt(document.getElementById("max_points").value, 10);
+  const minSymmetry = parseInt(
+    document.getElementById("min_symmetry").value,
+    10,
+  );
+  const maxSymmetry = parseInt(
+    document.getElementById("max_symmetry").value,
+    10,
+  );
+  adjustCanvas();
+  globals.allShapes = [];
+  const horizontalSpacing =
+    globals.drawingCanvas.width / (globals.numberOfShapes + 1);
+  const verticalExtent = globals.drawingCanvas.height / 4;
+  globals.maxRadius = Math.min(horizontalSpacing / 2, verticalExtent * 2);
+  globals.maxRadiusSquared = globals.maxRadius * globals.maxRadius;
+  const initialRadius = globals.maxRadius / 4;
+  for (let s = 0; s < globals.numberOfShapes; s++) {
+    const shape = {};
+    shape.symmetry = random(maxSymmetry - minSymmetry + 1) + minSymmetry;
+    shape.centre = {
+      x: (s + 1) * horizontalSpacing,
+      y: globals.drawingCanvas.height / 2,
+    };
+    shape.drift = { x: 0, y: 0 };
+    shape.numberOfPoints = random(maxPoints - minPoints + 1) + minPoints;
+    const angleStep = (2 * Math.PI) / shape.symmetry / shape.numberOfPoints;
+    shape.points = [];
+    for (let p = 0; p < shape.numberOfPoints; p++) {
+      const x = Math.cos(angleStep * p) * initialRadius;
+      const y = Math.sin(angleStep * p) * initialRadius;
+      const drift = { x: 0, y: 0 };
+      shape.points.push({ x: x, y: y, drift: drift });
+    }
+    globals.allShapes.push(shape);
+  }
+
+  animate();
 }
 
 function animate() {
-	timeOut = setTimeout(animate, 32)
-	movePoints()
-	displayPoints()
+  globals.animationTimeOutId = setTimeout(animate, 32);
+  movePoints();
+  displayPoints();
 }
 
 function movePoints() {
-	for (var s=0; s<numberOfShapes; s++) {
-		var angle = Math.random() * 2*Math.PI
-		var shape = shapes[s]
-		var points = shape.points
-		var centre = shape.centre
-		var drift = shape.drift
-		drift.x += Math.cos(angle) / 30
-		drift.y += Math.sin(angle) / 30
-		var lengthSquared = drift.x * drift.x + drift.y * drift.y
-		if (lengthSquared > 1) {
-			drift.x /= Math.sqrt(lengthSquared)
-			drift.y /= Math.sqrt(lengthSquared)
-		}		
-		centre.x += drift.x / 10
-		centre.y += drift.y / 10
-		if (centre.x < 0) {
-			centre.x += canvas.width
-		} else if (centre.x > canvas.width) {
-			centre.x -= canvas.width
-		}
-		if (centre.y < 0) {
-			centre.y += canvas.height
-		} else if (centre.y > canvas.height) {
-			centre.y -= canvas.height
-		}
-		for (var p=0; p<shape.numberOfPoints; p++) {
-			var angle = Math.random() * 2*Math.PI
-			var point = points[p]
-			var drift = point.drift
-			drift.x += Math.cos(angle) / 30
-			drift.y += Math.sin(angle) / 30
-			var lengthSquared = drift.x * drift.x + drift.y * drift.y
-			if (lengthSquared > 1) {
-				drift.x /= Math.sqrt(lengthSquared)
-				drift.y /= Math.sqrt(lengthSquared)
-			}
-			point.x += drift.x / 10
-			point.y += drift.y / 10
-			var lengthSquared = point.x * point.x + point.y * point.y
-			if (lengthSquared > maxRadiusSquared) {
-				point.x *= maxRadius / Math.sqrt(lengthSquared)
-				point.y *= maxRadius / Math.sqrt(lengthSquared)
-				var angle = Math.random() * 2*Math.PI
-				drift.x = Math.cos(angle) / 20
-				drift.y = Math.sin(angle) / 20
-			}
-		}
-	}
+  for (let s = 0; s < globals.numberOfShapes; s++) {
+    const angle = Math.random() * 2 * Math.PI;
+    const shape = globals.allShapes[s];
+    const points = shape.points;
+    const centre = shape.centre;
+    const drift = shape.drift;
+    drift.x += Math.cos(angle) / 30;
+    drift.y += Math.sin(angle) / 30;
+    const lengthSquared = drift.x * drift.x + drift.y * drift.y;
+    if (lengthSquared > 1) {
+      drift.x /= Math.sqrt(lengthSquared);
+      drift.y /= Math.sqrt(lengthSquared);
+    }
+    centre.x += drift.x / 10;
+    centre.y += drift.y / 10;
+    if (centre.x < 0) {
+      centre.x += globals.drawingCanvas.width;
+    } else if (centre.x > globals.drawingCanvas.width) {
+      centre.x -= globals.drawingCanvas.width;
+    }
+    if (centre.y < 0) {
+      centre.y += globals.drawingCanvas.height;
+    } else if (centre.y > globals.drawingCanvas.height) {
+      centre.y -= globals.drawingCanvas.height;
+    }
+    for (let p = 0; p < shape.numberOfPoints; p++) {
+      const angle = Math.random() * 2 * Math.PI;
+      const point = points[p];
+      const drift = point.drift;
+      drift.x += Math.cos(angle) / 30;
+      drift.y += Math.sin(angle) / 30;
+      const driftLengthSquared = drift.x * drift.x + drift.y * drift.y;
+      if (driftLengthSquared > 1) {
+        drift.x /= Math.sqrt(driftLengthSquared);
+        drift.y /= Math.sqrt(driftLengthSquared);
+      }
+      point.x += drift.x / 10;
+      point.y += drift.y / 10;
+      const lengthSquared = point.x * point.x + point.y * point.y;
+      if (lengthSquared > globals.maxRadiusSquared) {
+        point.x *= globals.maxRadius / Math.sqrt(lengthSquared);
+        point.y *= globals.maxRadius / Math.sqrt(lengthSquared);
+        const angle = Math.random() * 2 * Math.PI;
+        drift.x = Math.cos(angle) / 20;
+        drift.y = Math.sin(angle) / 20;
+      }
+    }
+  }
 }
 
 function displayPoints() {
-	ctx.fillStyle = 'rgba(255, 255, 255, 255)'
-	ctx.fillRect(0, 0, canvas.width, canvas.height)
-	for (var s=0; s<numberOfShapes; s++) {
-		var shape = shapes[s]
-		var symmetry = shape.symmetry
-		var mainCentre = shape.centre
-		var points = shape.points
-		var horizontalStart = mainCentre.x > canvas.width - maxRadius ?-1:0
-		var horizontalEnd = mainCentre.x < maxRadius ?1:0
-		var verticalStart = mainCentre.y > canvas.height - maxRadius ?-1:0
-		var verticalEnd = mainCentre.y < maxRadius ?1:0
-		for (var horizontal=horizontalStart; horizontal<=horizontalEnd; horizontal++) {
-			for (var vertical=verticalStart; vertical<=verticalEnd; vertical++) {
-				var centre = {x:mainCentre.x + horizontal*canvas.width, y:mainCentre.y + vertical*canvas.height}
-				ctx.beginPath()
-				ctx.moveTo(centre.x + points[0].x, centre.y + points[0].y)
-				for (var rotation=0; rotation<symmetry; rotation++) {
-					for (var p=0; p<shape.numberOfPoints; p++) {
-						var rotatedCoords = rotated(points[p], rotation, symmetry)
-						var x = rotatedCoords.x
-						var y = rotatedCoords.y
-						ctx.lineTo(centre.x + x, centre.y + y)
-					}
-				}
-				ctx.closePath()
-				ctx.fillStyle = 'rgba(0, 0, 0, 255)'
-				ctx.fill('evenodd')
-			}
-		}
-	}
+  globals.ctx.fillStyle = "rgba(255, 255, 255, 255)";
+  globals.ctx.fillRect(
+    0,
+    0,
+    globals.drawingCanvas.width,
+    globals.drawingCanvas.height,
+  );
+  for (let s = 0; s < globals.numberOfShapes; s++) {
+    const shape = globals.allShapes[s];
+    const symmetry = shape.symmetry;
+    const mainCentre = shape.centre;
+    const points = shape.points;
+    const horizontalStart =
+      mainCentre.x > globals.drawingCanvas.width - globals.maxRadius ? -1 : 0;
+    const horizontalEnd = mainCentre.x < globals.maxRadius ? 1 : 0;
+    const verticalStart =
+      mainCentre.y > globals.drawingCanvas.height - globals.maxRadius ? -1 : 0;
+    const verticalEnd = mainCentre.y < globals.maxRadius ? 1 : 0;
+    for (
+      let horizontal = horizontalStart;
+      horizontal <= horizontalEnd;
+      horizontal++
+    ) {
+      for (let vertical = verticalStart; vertical <= verticalEnd; vertical++) {
+        const centre = {
+          x: mainCentre.x + horizontal * globals.drawingCanvas.width,
+          y: mainCentre.y + vertical * globals.drawingCanvas.height,
+        };
+        globals.ctx.beginPath();
+        globals.ctx.moveTo(centre.x + points[0].x, centre.y + points[0].y);
+        for (let rotation = 0; rotation < symmetry; rotation++) {
+          for (let p = 0; p < shape.numberOfPoints; p++) {
+            const rotatedCoords = rotated(points[p], rotation, symmetry);
+            const x = rotatedCoords.x;
+            const y = rotatedCoords.y;
+            globals.ctx.lineTo(centre.x + x, centre.y + y);
+          }
+        }
+        globals.ctx.closePath();
+        globals.ctx.fillStyle = "rgba(0, 0, 0, 255)";
+        globals.ctx.fill("evenodd");
+      }
+    }
+  }
 }
 
 function rotated(point, rotation, symmetry) {
-	var angle = 2*Math.PI / symmetry * rotation
-	var x = point.x * Math.cos(angle) - point.y * Math.sin(angle)
-	var y = point.x * Math.sin(angle) + point.y * Math.cos(angle)
-	return {x:x, y:y}
+  const angle = ((2 * Math.PI) / symmetry) * rotation;
+  const x = point.x * Math.cos(angle) - point.y * Math.sin(angle);
+  const y = point.x * Math.sin(angle) + point.y * Math.cos(angle);
+  return { x: x, y: y };
 }
 
 function random(n) {
-	return Math.floor(Math.random() * n)
+  return Math.floor(Math.random() * n);
 }
