@@ -19,7 +19,6 @@ if (document.readyState === "loading") {
 function initialise() {
   globals.drawingCanvas = document.getElementById("canvas");
   globals.ctx = document.getElementById("canvas").getContext("2d");
-  const fullScreenDiv = document.getElementById("full_screen_div");
   document.onfullscreenchange = function (event) {
     adjustCanvas();
     restart();
@@ -28,7 +27,7 @@ function initialise() {
 
   document
     .getElementById("full_screen")
-    .addEventListener("click", () => fullScreenDiv.requestFullscreen());
+    .addEventListener("click", () => globals.drawingCanvas.requestFullscreen());
 
   restart();
 }
