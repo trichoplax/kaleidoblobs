@@ -15,9 +15,9 @@ export class Scene {
   ) {
     this.ctx = ctx;
     this.canvas = canvas;
-    const horizontalSpacing = canvas.width / (numberOfShapes + 1);
-    const verticalExtent = canvas.height / 4;
-    const maxRadius = Math.min(horizontalSpacing / 2, verticalExtent * 2);
+    const maxRadius = Math.sqrt(
+      (canvas.width * canvas.height) / numberOfShapes / 4,
+    );
     const maxRadiusSquared = maxRadius * maxRadius;
     this.allBlobs = [];
     for (let s = 0; s < numberOfShapes; s++) {
@@ -26,9 +26,13 @@ export class Scene {
         maxComponentsPerBlob,
       );
       const symmetry = randomBetween(minSymmetry, maxSymmetry);
+      const shortSide = Math.min(canvas.width, canvas.height);
+      const canvasCentre = { x: canvas.width / 2, y: canvas.height / 2 };
+      const radius = (Math.sqrt(s / numberOfShapes) * shortSide) / 2;
+      const angle = s * Math.PI * (Math.sqrt(5) - 1);
       const centre = {
-        x: (s + 1) * horizontalSpacing,
-        y: canvas.height / 2,
+        x: canvasCentre.x + radius * Math.cos(angle),
+        y: canvasCentre.y + radius * Math.sin(angle),
       };
       const numberOfPoints = randomBetween(minPoints, maxPoints);
       this.allBlobs.push(
