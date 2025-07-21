@@ -20,7 +20,7 @@ export class Component {
     this.ctx = ctx;
     this.colour = colour;
     this.compositeOperation = compositeOperation;
-    if ((this.compositeOperation = "random")) {
+    if (this.compositeOperation === "random") {
       let operations = ["xor", "lighter", "multiply", "source-over"];
       this.compositeOperation =
         operations[Math.floor(Math.random() * operations.length)];
