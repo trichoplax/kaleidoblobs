@@ -1,11 +1,12 @@
 "use strict";
 
-import { Kaleidoblobs } from "./kaleidoblobs.js";
+import { Scene } from "./scene.js";
 
 const globals = {
   animationTimeOutId: null,
   ctx: null,
-  drawingCanvas: null,
+  canvas: null,
+  scene: null,
 };
 
 if (document.readyState === "loading") {
@@ -15,8 +16,8 @@ if (document.readyState === "loading") {
 }
 
 function initialise() {
-  globals.drawingCanvas = document.getElementById("canvas");
-  globals.ctx = document.getElementById("canvas").getContext("2d");
+  globals.canvas = document.getElementById("canvas");
+  globals.ctx = globals.canvas.getContext("2d");
   document.onfullscreenchange = function (event) {
     adjustCanvas();
     restart();
@@ -24,23 +25,31 @@ function initialise() {
   document.getElementById("restart").addEventListener("click", restart);
   document
     .getElementById("full_screen")
-    .addEventListener("click", () => globals.drawingCanvas.requestFullscreen());
+    .addEventListener("click", () => globals.canvas.requestFullscreen());
   restart();
 }
 
 function adjustCanvas() {
   if (document.fullscreenElement) {
-    globals.drawingCanvas.height = window.screen.height;
-    globals.drawingCanvas.width = window.screen.width;
+    globals.canvas.width = window.screen.width;
+    globals.canvas.height = window.screen.height;
   } else {
-    globals.drawingCanvas.height = window.innerHeight;
-    globals.drawingCanvas.width = window.innerWidth;
+    globals.canvas.width = window.innerWidth;
+    globals.canvas.height = window.innerHeight;
   }
 }
 
 function restart() {
   clearTimeout(globals.animationTimeOutId);
-  const numberOfShapes = parseInt(document.getElementById("shapes").value, 10);
+  const numberOfBlobs = parseInt(document.getElementById("blobs").value, 10);
+  const minComponentsPerBlob = parseInt(
+    document.getElementById("min_components").value,
+    10,
+  );
+  const maxComponentsPerBlob = parseInt(
+    document.getElementById("max_components").value,
+    10,
+  );
   const minPoints = parseInt(document.getElementById("min_points").value, 10);
   const maxPoints = parseInt(document.getElementById("max_points").value, 10);
   const minSymmetry = parseInt(
@@ -51,21 +60,27 @@ function restart() {
     document.getElementById("max_symmetry").value,
     10,
   );
+  const compositeOperation = document.getElementById(
+    "composite_operation",
+  ).value;
   adjustCanvas();
-  globals.kaleidoblobs = new Kaleidoblobs(
-    globals.drawingCanvas,
+  globals.scene = new Scene(
+    globals.canvas,
     globals.ctx,
-    numberOfShapes,
+    numberOfBlobs,
     minPoints,
     maxPoints,
     minSymmetry,
     maxSymmetry,
+    minComponentsPerBlob,
+    maxComponentsPerBlob,
+    compositeOperation,
   );
   animate();
 }
 
 function animate() {
   globals.animationTimeOutId = setTimeout(animate, 32);
-  globals.kaleidoblobs.move();
-  globals.kaleidoblobs.display();
+  globals.scene.move();
+  globals.scene.display();
 }

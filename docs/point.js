@@ -1,4 +1,4 @@
-export class Kaleidopoint {
+export class Point {
   constructor(x, y, maxRadius) {
     this.x = x;
     this.y = y;
