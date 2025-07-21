@@ -80,7 +80,7 @@ function restart() {
 }
 
 function animate() {
-  globals.animationTimeOutId = setTimeout(animate, 32);
   globals.scene.move();
   globals.scene.display();
+  globals.animationTimeOutId = setTimeout(animate, 32);
 }
