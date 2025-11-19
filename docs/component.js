@@ -65,6 +65,33 @@ export class Component {
     for (const point of points) {
       point.move();
     }
+    this.red = Math.min(
+      255,
+      Math.max(
+        0,
+        this.red +
+          Math.floor(Math.random() * 2) -
+          Math.floor(Math.random() * 2),
+      ),
+    );
+    this.green = Math.min(
+      255,
+      Math.max(
+        0,
+        this.green +
+          Math.floor(Math.random() * 2) -
+          Math.floor(Math.random() * 2),
+      ),
+    );
+    this.blue = Math.min(
+      255,
+      Math.max(
+        0,
+        this.blue +
+          Math.floor(Math.random() * 2) -
+          Math.floor(Math.random() * 2),
+      ),
+    );
   }
 
   display() {

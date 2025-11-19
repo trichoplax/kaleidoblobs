@@ -18,9 +18,9 @@ export class Blob {
     this.ctx = ctx;
     this.components = [];
     for (let c = 0; c < numberOfComponents; c++) {
-      const red = Math.floor(Math.random() * 128 + Math.random() * 128);
-      const green = Math.floor(Math.random() * 128 + Math.random() * 128);
-      const blue = Math.floor(Math.random() * 128 + Math.random() * 128);
+      const red = Math.floor(Math.random() * 128) + 128;
+      const green = Math.floor(Math.random() * 128) + 128;
+      const blue = Math.floor(Math.random() * 128) + 128;
       this.components.push(
         new Component(
           centre,
