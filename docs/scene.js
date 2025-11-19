@@ -20,6 +20,7 @@ export class Scene {
     );
     const maxRadiusSquared = maxRadius * maxRadius;
     this.allBlobs = [];
+    const startingAngle = Math.random() * Math.PI * 2;
     for (let s = 0; s < numberOfShapes; s++) {
       const componentsPerBlob = randomBetween(
         minComponentsPerBlob,
@@ -31,8 +32,8 @@ export class Scene {
       const radius = (Math.sqrt(s / numberOfShapes) * shortSide) / 2;
       const angle = s * Math.PI * (Math.sqrt(5) - 1);
       const centre = {
-        x: canvasCentre.x + radius * Math.cos(angle),
-        y: canvasCentre.y + radius * Math.sin(angle),
+        x: canvasCentre.x + radius * Math.cos(startingAngle + angle),
+        y: canvasCentre.y + radius * Math.sin(startingAngle + angle),
       };
       const numberOfPoints = randomBetween(minPoints, maxPoints);
       this.allBlobs.push(
