@@ -101,7 +101,7 @@ export class Component {
           }
         }
         this.ctx.closePath();
-        this.ctx.fillStyle = `rgba(${red},${green},${blue})`;
+        this.ctx.fillStyle = `rgba(${this.red},${this.green},${this.blue})`;
         this.ctx.fill("evenodd");
       }
     }
