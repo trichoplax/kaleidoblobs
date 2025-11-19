@@ -21,7 +21,6 @@ export class Blob {
       const red = Math.floor(Math.random() * 128 + Math.random() * 128);
       const green = Math.floor(Math.random() * 128 + Math.random() * 128);
       const blue = Math.floor(Math.random() * 128 + Math.random() * 128);
-      const colour = `rgba(${red}, ${green}, ${blue})`;
       this.components.push(
         new Component(
           centre,
@@ -30,7 +29,9 @@ export class Blob {
           maxRadius,
           canvas,
           ctx,
-          colour,
+          red,
+          green,
+          blue,
           compositeOperation,
         ),
       );

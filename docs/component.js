@@ -8,7 +8,9 @@ export class Component {
     maxRadius,
     canvas,
     ctx,
-    colour,
+    red,
+    green,
+    blue,
     compositeOperation,
   ) {
     this.centre = centre;
@@ -18,7 +20,9 @@ export class Component {
     this.maxRadius = maxRadius;
     this.canvas = canvas;
     this.ctx = ctx;
-    this.colour = colour;
+    this.red = red;
+    this.green = green;
+    this.blue = blue;
     this.compositeOperation = compositeOperation;
     if (this.compositeOperation === "random") {
       let operations = ["xor", "lighter", "multiply", "source-over"];
@@ -97,7 +101,7 @@ export class Component {
           }
         }
         this.ctx.closePath();
-        this.ctx.fillStyle = this.colour;
+        this.ctx.fillStyle = `rgba(${red},${green},${blue})`;
         this.ctx.fill("evenodd");
       }
     }
