@@ -8,25 +8,25 @@
     <canvas id='canvas'></canvas>
     <button id='restart'>Restart</button><br>
     <label for="blobs">Blobs</label>
-    <input id='blobs' type='number' min='1' max='99' style='width:4em' value='9' /><br>
+    <input id='blobs' type='number' min='1' max='99' style='width:4em' value='17' /><br>
     <label for="min_components">Minimum components per blobs</label>
-    <input id='min_components' type='number' min='1' max='5' style='width:4em' value='1' /><br>
+    <input id='min_components' type='number' min='1' max='9' style='width:4em' value='1' /><br>
     <label for="max_components">Maximum components per blobs</label>
-    <input id='max_components' type='number' min='1' max='5' style='width:4em' value='3' /><br>
+    <input id='max_components' type='number' min='1' max='9' style='width:4em' value='5' /><br>
     <label for="min_points">Minimum points</label>
     <input id='min_points' type='number' min='1' max='99' style='width:4em' value='3' /><br>
     <label for="max_points">Maximum points</label>
     <input id='max_points' type='number' min='1' max='99' style='width:4em' value='13' /><br>
     <label for="min_symmetry">Minimum rotational symmetry</label>
-    <input id='min_symmetry' type='number' min='3' max='99' style='width:4em' value='5' /><br>
+    <input id='min_symmetry' type='number' min='1' max='99' style='width:4em' value='5' /><br>
     <label for="max_symmetry">Maximum rotational symmetry</label>
-    <input id='max_symmetry' type='number' min='3' max='99' style='width:4em' value='11' /><br>
+    <input id='max_symmetry' type='number' min='1' max='99' style='width:4em' value='11' /><br>
     <label for="composite_operation">Composite operation</label>
     <select id="composite_operation" name="operation">
-      <option value="random" selected>Random mixture</option>
+      <option value="random">Random mixture</option>
       <option value="xor">XOR</option>
       <option value="lighter">Lighter</option>
-      <option value="multiply">Multiply</option>
+      <option value="multiply" selected>Multiply</option>
       <option value="source-over">Over</option>
     </select><br>
     <br>
