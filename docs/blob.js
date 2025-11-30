@@ -15,7 +15,7 @@ export class Blob {
     this.centre = centre;
     this.symmetry = symmetry;
     this.maxRadius = maxRadius;
-    this.drift = { x: 0, y: 0 };
+    this.driftAngle = Math.random() * 2 * Math.PI;
     this.canvas = canvas;
     this.ctx = ctx;
     this.components = [];
@@ -46,18 +46,12 @@ export class Blob {
   }
 
   move() {
-    const angle = Math.random() * 2 * Math.PI;
     const centre = this.centre;
-    const drift = this.drift;
-    drift.x += Math.cos(angle) / 30;
-    drift.y += Math.sin(angle) / 30;
-    const lengthSquared = drift.x * drift.x + drift.y * drift.y;
-    if (lengthSquared > 1) {
-      drift.x /= Math.sqrt(lengthSquared);
-      drift.y /= Math.sqrt(lengthSquared);
-    }
-    centre.x += drift.x / 10;
-    centre.y += drift.y / 10;
+    this.driftAngle =
+      (this.driftAngle + 2 * Math.PI + Math.random() - Math.random()) %
+      (2 * Math.PI);
+    centre.x += Math.cos(this.driftAngle) / 10;
+    centre.y += Math.sin(this.driftAngle) / 10;
     if (centre.x < 0) {
       centre.x += this.canvas.width;
     } else if (centre.x >= this.canvas.width) {
