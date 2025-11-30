@@ -19,10 +19,10 @@ export class Point {
           Math.random() -
           Math.random() -
           Math.random()) /
-          10) %
+          100) %
       (2 * Math.PI);
-    this.x += Math.cos(this.driftAngle) / 10;
-    this.y += Math.sin(this.driftAngle) / 10;
+    this.x += Math.cos(this.driftAngle) / 3;
+    this.y += Math.sin(this.driftAngle) / 3;
     const lengthSquared = this.x * this.x + this.y * this.y;
     if (lengthSquared > this.maxRadiusSquared) {
       const currentLength = Math.sqrt(lengthSquared);

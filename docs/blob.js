@@ -58,10 +58,10 @@ export class Blob {
           Math.random() -
           Math.random() -
           Math.random()) /
-          10) %
+          100) %
       (2 * Math.PI);
-    centre.x += Math.cos(this.driftAngle) / 10;
-    centre.y += Math.sin(this.driftAngle) / 10;
+    centre.x += Math.cos(this.driftAngle) / 3;
+    centre.y += Math.sin(this.driftAngle) / 3;
     if (centre.x < 0) {
       centre.x += this.canvas.width;
     } else if (centre.x >= this.canvas.width) {
