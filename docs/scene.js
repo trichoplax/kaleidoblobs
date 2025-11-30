@@ -18,8 +18,7 @@ export class Scene {
     const maxRadius = Math.sqrt(
       (canvas.width * canvas.height) / numberOfShapes / 4,
     );
-    const maxRadiusSquared = maxRadius * maxRadius;
-    this.allBlobs = [];
+    this.blobs = [];
     const startingAngle = Math.random() * Math.PI * 2;
     for (let s = 0; s < numberOfShapes; s++) {
       const componentsPerBlob = randomBetween(
@@ -37,7 +36,7 @@ export class Scene {
         y: canvasCentre.y + radius * Math.sin(startingAngle + angle),
       };
       const numberOfPoints = randomBetween(minPoints, maxPoints);
-      this.allBlobs.push(
+      this.blobs.push(
         new Blob(
           centre,
           numberOfPoints,
@@ -54,14 +53,14 @@ export class Scene {
   }
 
   move() {
-    for (const blob of this.allBlobs) {
+    for (const blob of this.blobs) {
       blob.move();
     }
   }
 
   display() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    for (const blob of this.allBlobs) {
+    for (const blob of this.blobs) {
       blob.display();
     }
   }
