@@ -43,30 +43,7 @@ export class Component {
   }
 
   move() {
-    const angle = Math.random() * 2 * Math.PI;
-    const points = this.points;
-    const centre = this.centre;
-    const drift = this.drift;
-    drift.x += Math.cos(angle) / 30;
-    drift.y += Math.sin(angle) / 30;
-    const lengthSquared = drift.x * drift.x + drift.y * drift.y;
-    if (lengthSquared > 1) {
-      drift.x /= Math.sqrt(lengthSquared);
-      drift.y /= Math.sqrt(lengthSquared);
-    }
-    centre.x += drift.x / 10;
-    centre.y += drift.y / 10;
-    if (centre.x < 0) {
-      centre.x += this.canvas.width;
-    } else if (centre.x >= this.canvas.width) {
-      centre.x -= this.canvas.width;
-    }
-    if (centre.y < 0) {
-      centre.y += this.canvas.height;
-    } else if (centre.y >= this.canvas.height) {
-      centre.y -= this.canvas.height;
-    }
-    for (const point of points) {
+    for (const point of this.points) {
       point.move();
     }
     for (let i = 0; i < this.numberOfColourSamples; i++) {
