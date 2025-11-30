@@ -15,7 +15,6 @@ export class Component {
   ) {
     this.centre = centre;
     this.symmetry = symmetry;
-    this.drift = { x: 0, y: 0 };
     this.points = [];
     this.maxRadius = maxRadius;
     this.canvas = canvas;

@@ -15,6 +15,7 @@ export class Blob {
     this.centre = centre;
     this.symmetry = symmetry;
     this.maxRadius = maxRadius;
+    this.drift = { x: 0, y: 0 };
     this.canvas = canvas;
     this.ctx = ctx;
     this.components = [];
