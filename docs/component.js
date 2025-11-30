@@ -69,7 +69,7 @@ export class Component {
     for (const point of points) {
       point.move();
     }
-    for (i = 0; i < this.numberOfColourSamples; i++) {
+    for (let i = 0; i < this.numberOfColourSamples; i++) {
       this.reds[i] = Math.min(
         255,
         Math.max(
