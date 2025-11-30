@@ -33,7 +33,7 @@ export class Component {
       this.compositeOperation =
         operations[Math.floor(Math.random() * operations.length)];
     }
-    const initialRadius = maxRadius / 4;
+    const initialRadius = maxRadius / 16;
     const angleStep = (2 * Math.PI) / symmetry / numberOfPoints;
     for (let p = 0; p < numberOfPoints; p++) {
       const x = Math.cos(angleStep * p) * initialRadius;
