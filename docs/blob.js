@@ -50,14 +50,15 @@ export class Blob {
     this.driftAngle =
       (this.driftAngle +
         2 * Math.PI +
-        Math.random() +
-        Math.random() +
-        Math.random() +
-        Math.random() -
-        Math.random() -
-        Math.random() -
-        Math.random() -
-        Math.random()) %
+        (Math.random() +
+          Math.random() +
+          Math.random() +
+          Math.random() -
+          Math.random() -
+          Math.random() -
+          Math.random() -
+          Math.random()) /
+          10) %
       (2 * Math.PI);
     centre.x += Math.cos(this.driftAngle) / 10;
     centre.y += Math.sin(this.driftAngle) / 10;
