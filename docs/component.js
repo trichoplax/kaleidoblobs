@@ -8,9 +8,9 @@ export class Component {
     maxRadius,
     canvas,
     ctx,
-    red,
-    green,
-    blue,
+    reds,
+    greens,
+    blues,
     compositeOperation,
   ) {
     this.centre = centre;
@@ -20,9 +20,13 @@ export class Component {
     this.maxRadius = maxRadius;
     this.canvas = canvas;
     this.ctx = ctx;
-    this.red = red;
-    this.green = green;
-    this.blue = blue;
+    this.reds = reds;
+    this.greens = greens;
+    this.blues = blues;
+    this.numberOfColourSamples = reds.length;
+    console.assert(
+      reds.length == greens.length && greens.length == blues.length,
+    );
     this.compositeOperation = compositeOperation;
     if (this.compositeOperation === "random") {
       let operations = ["xor", "lighter", "multiply", "source-over"];
@@ -65,33 +69,35 @@ export class Component {
     for (const point of points) {
       point.move();
     }
-    this.red = Math.min(
-      255,
-      Math.max(
-        0,
-        this.red +
-          Math.floor(Math.random() * 2) -
-          Math.floor(Math.random() * 2),
-      ),
-    );
-    this.green = Math.min(
-      255,
-      Math.max(
-        0,
-        this.green +
-          Math.floor(Math.random() * 2) -
-          Math.floor(Math.random() * 2),
-      ),
-    );
-    this.blue = Math.min(
-      255,
-      Math.max(
-        0,
-        this.blue +
-          Math.floor(Math.random() * 2) -
-          Math.floor(Math.random() * 2),
-      ),
-    );
+    for (i = 0; i < this.numberOfColourSamples; i++) {
+      this.reds[i] = Math.min(
+        255,
+        Math.max(
+          0,
+          this.reds[i] +
+            Math.floor(Math.random() * 2) -
+            Math.floor(Math.random() * 2),
+        ),
+      );
+      this.greens[i] = Math.min(
+        255,
+        Math.max(
+          0,
+          this.greens[i] +
+            Math.floor(Math.random() * 2) -
+            Math.floor(Math.random() * 2),
+        ),
+      );
+      this.blues[i] = Math.min(
+        255,
+        Math.max(
+          0,
+          this.blues[i] +
+            Math.floor(Math.random() * 2) -
+            Math.floor(Math.random() * 2),
+        ),
+      );
+    }
   }
 
   display() {
@@ -128,7 +134,16 @@ export class Component {
           }
         }
         this.ctx.closePath();
-        this.ctx.fillStyle = `rgba(${this.red},${this.green},${this.blue})`;
+        const red = Math.round(
+          this.reds.reduce((a, b) => a + b) / this.numberOfColourSamples,
+        );
+        const green = Math.round(
+          this.greens.reduce((a, b) => a + b) / this.numberOfColourSamples,
+        );
+        const blue = Math.round(
+          this.blues.reduce((a, b) => a + b) / this.numberOfColourSamples,
+        );
+        this.ctx.fillStyle = `rgba(${red},${green},${blue})`;
         this.ctx.fill("evenodd");
       }
     }

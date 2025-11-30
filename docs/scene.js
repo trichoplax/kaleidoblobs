@@ -26,6 +26,7 @@ export class Scene {
         minComponentsPerBlob,
         maxComponentsPerBlob,
       );
+      const colourSamplesPerColour = 2;
       const symmetry = randomBetween(minSymmetry, maxSymmetry);
       const shortSide = Math.min(canvas.width, canvas.height);
       const canvasCentre = { x: canvas.width / 2, y: canvas.height / 2 };
@@ -45,6 +46,7 @@ export class Scene {
           canvas,
           ctx,
           componentsPerBlob,
+          colourSamplesPerColour,
           compositeOperation,
         ),
       );

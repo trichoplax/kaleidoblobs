@@ -9,6 +9,7 @@ export class Blob {
     canvas,
     ctx,
     numberOfComponents,
+    numberOfColourSamples,
     compositeOperation,
   ) {
     this.centre = centre;
@@ -18,9 +19,14 @@ export class Blob {
     this.ctx = ctx;
     this.components = [];
     for (let c = 0; c < numberOfComponents; c++) {
-      const red = 128;
-      const green = 128;
-      const blue = 128;
+      const reds = [];
+      const greens = [];
+      const blues = [];
+      for (let i = 0; i < numberOfColourSamples; i++) {
+        reds.push(128);
+        greens.push(128);
+        blues.push(128);
+      }
       this.components.push(
         new Component(
           centre,
@@ -29,9 +35,9 @@ export class Blob {
           maxRadius,
           canvas,
           ctx,
-          red,
-          green,
-          blue,
+          reds,
+          greens,
+          blues,
           compositeOperation,
         ),
       );
