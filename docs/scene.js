@@ -16,7 +16,7 @@ export class Scene {
     this.ctx = ctx;
     this.canvas = canvas;
     const maxRadius = Math.sqrt(
-      (canvas.width * canvas.height) / numberOfShapes / 4,
+      (canvas.width * canvas.height) / numberOfShapes / 12,
     );
     this.blobs = [];
     const startingAngle = Math.random() * Math.PI * 2;
